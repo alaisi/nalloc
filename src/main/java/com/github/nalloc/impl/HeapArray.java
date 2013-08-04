@@ -27,9 +27,9 @@ import com.github.nalloc.Array;
 public class HeapArray<T> implements Array<T> {
 
 	protected final NativeStruct struct;
-	protected final long size;
 	private final long msize;
 
+	protected long size;
 	private long address;
 
 	/**

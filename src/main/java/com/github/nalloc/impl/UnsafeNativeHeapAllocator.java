@@ -49,6 +49,9 @@ public class UnsafeNativeHeapAllocator implements NativeHeapAllocator {
 
 	@Override
 	public <T> Array<T> calloc(final long nmemb, final Class<T> structType) {
+		if(nmemb < 1) {
+			throw new IllegalArgumentException("nmemb must be > 0");
+		}
 		NativeStruct struct = NativeStruct.create(implementations.get(structType));
 		long address = UNSAFE.allocateMemory(nmemb * struct.getSize());
 		UNSAFE.setMemory(address, nmemb * struct.getSize(), (byte) 0);
@@ -58,7 +61,10 @@ public class UnsafeNativeHeapAllocator implements NativeHeapAllocator {
 	@Override
 	public <T> Array<T> realloc(final Array<T> pointer, final long nmemb) {
 		NativeStruct struct = (NativeStruct) pointer.deref();
-		struct.address = UNSAFE.reallocateMemory(struct.address, nmemb * struct.getSize());
+		HeapArray<T> array = (HeapArray<T>) pointer;
+		array.address(UNSAFE.reallocateMemory(struct.address, nmemb * struct.getSize()));
+		array.size = nmemb;
+		struct.address = array.address();
 		return pointer;
 	}
 
