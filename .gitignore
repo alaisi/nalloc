@@ -2,4 +2,9 @@ target/
 .settings/
 .project
 .classpath
-
+pom.xml.next
+release.properties
+pom.xml.releaseBackup
+pom.xml.backup
+pom.xml.branch
+pom.xml.tag
