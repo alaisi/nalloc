@@ -98,7 +98,7 @@ final class StructClassGenerator {
 	private void generateGetSize(final CtClass generated, final Struct struct, final long finalOffset) 
 			throws CannotCompileException {
 
-		long size = finalOffset + (finalOffset % struct.pad());
+		long size = struct.pad() == 1 ? finalOffset : finalOffset + (struct.pad() - finalOffset % struct.pad());
 		generated.addMethod(CtNewMethod.make(String.format(
 				"public final long getSize(){ return %dL; }", size), 
 				generated));

@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import sun.misc.Unsafe;
 
 /**
- * Static methods for direct memory access.
+ * Utility methods for direct memory access.
  */
 @SuppressWarnings("restriction")
 public enum PointerArithmetics {
@@ -130,7 +130,7 @@ public enum PointerArithmetics {
 		UNSAFE.putByte(address, (byte) value);
 	}
 	public final void setAnsiCChars(final long address, final char[] chars, final long len) {
-		for(int i = 0; i < len-1 && i < chars.length; i++) {
+		for(int i = 0; i < len && i < chars.length; i++) {
 			UNSAFE.putByte(address + i, (byte) chars[i]);
 		}
 	}
