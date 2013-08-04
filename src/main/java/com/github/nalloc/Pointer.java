@@ -19,9 +19,9 @@ package com.github.nalloc;
  *
  * @author Antti Laisi
  */
-public interface Pointer<T> {
+public interface Pointer<T> extends AutoCloseable {
 
-	/** 
+	/**
 	 * @return Struct referenced by this pointer.
 	 */
 	T deref();
@@ -30,7 +30,7 @@ public interface Pointer<T> {
 	 * @return Memory address pointed to.
 	 */
 	long address();
-	
+
 	/**
 	 * Sets memory address.
 	 *
@@ -42,10 +42,16 @@ public interface Pointer<T> {
 	 * Frees memory that is pointed to by this pointer.
 	 */
 	void free();
-	
+
 	/**
 	 * @return Clone of this pointer
 	 */
 	Pointer<T> clone();
+
+	/**
+	 * AutoCloseable support, calls free().
+	 */
+	@Override
+	void close();
 
 }

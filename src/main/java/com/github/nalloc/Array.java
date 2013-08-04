@@ -39,5 +39,6 @@ public interface Array<T> extends Pointer<T> {
 	/**
 	 * @return Clone of this array pointer.
 	 */
+	@Override
 	Array<T> clone();
 }

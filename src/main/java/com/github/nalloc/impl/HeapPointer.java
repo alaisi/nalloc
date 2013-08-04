@@ -20,7 +20,7 @@ import com.github.nalloc.Pointer;
 
 /**
  * {@link Pointer} to a single struct.
- * 
+ *
  * @author Antti Laisi
  */
 @SuppressWarnings("restriction")
@@ -61,5 +61,10 @@ final class HeapPointer<T> implements Pointer<T> {
 	@Override
 	public final Pointer<T> clone() {
 		return new HeapPointer<>(struct.clone());
+	}
+
+	@Override
+	public void close() {
+		free();
 	}
 }

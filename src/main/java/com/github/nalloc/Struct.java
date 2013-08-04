@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 public @interface Struct {
 
-	/** 
+	/**
 	 * List of fields in the struct.
 	 * */
 	Field[] value();
@@ -53,7 +53,7 @@ public @interface Struct {
 	@Retention(RUNTIME)
 	@Target(ANNOTATION_TYPE)
 	public @interface Field {
-		/** 
+		/**
 		 * Name of the field.
 		 * */
 		String name();

@@ -28,7 +28,7 @@ import com.github.nalloc.Struct.Type;
 
 /**
  * Generates implementing classes for struct interfaces.
- * 
+ *
  * @author Antti Laisi
  */
 final class StructClassGenerator {
@@ -52,7 +52,7 @@ final class StructClassGenerator {
 
 		try {
 			return (Class<? extends NativeStruct>) Class.forName(className, false, definitionClass.getClassLoader());
-		} catch(ClassNotFoundException e) { 
+		} catch(ClassNotFoundException e) {
 			/* proceed with generating implementing class */
 		}
 
@@ -65,13 +65,13 @@ final class StructClassGenerator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Class<? extends NativeStruct> generate(final String className, final Class<?> definitionClass, final Struct struct) 
+	private Class<? extends NativeStruct> generate(final String className, final Class<?> definitionClass, final Struct struct)
 			throws NotFoundException, CannotCompileException {
 
 		CtClass definition = classes.get(definitionClass.getName());
 		definition.freeze();
 
-		CtClass generated = classes.makeClass(className, 
+		CtClass generated = classes.makeClass(className,
 				classes.get(NativeStruct.class.getName()));
 		generated.addInterface(definition);
 
@@ -88,19 +88,19 @@ final class StructClassGenerator {
 
 	/*
 	 * Creates getSize() method that returns byte length of struct.
-	 * 
+	 *
 	 *   public class Example$GenStruct {
-	 *     public final long getSize() { 
+	 *     public final long getSize() {
 	 *       return 123L;
 	 *     }
 	 *   }
 	 */
-	private void generateGetSize(final CtClass generated, final Struct struct, final long finalOffset) 
+	private void generateGetSize(final CtClass generated, final Struct struct, final long finalOffset)
 			throws CannotCompileException {
 
 		long size = struct.pad() == 1 ? finalOffset : finalOffset + (struct.pad() - finalOffset % struct.pad());
 		generated.addMethod(CtNewMethod.make(String.format(
-				"public final long getSize(){ return %dL; }", size), 
+				"public final long getSize(){ return %dL; }", size),
 				generated));
 	}
 
@@ -132,11 +132,11 @@ final class StructClassGenerator {
 
 		Class<?> nestedStruct = generate(field.struct());
 
-		generated.addField(new CtField(classes.get(nestedStruct.getName()), "_" + field.name(), generated), 
+		generated.addField(new CtField(classes.get(nestedStruct.getName()), "_" + field.name(), generated),
 				"new " + nestedStruct.getName() + "();");
 
 		generated.addMethod(CtNewMethod.make(String.format(
-				"public final %s %s(){ _%s.setAddress(super.address + %dL); return _%s; }", 
+				"public final %s %s(){ _%s.setAddress(super.address + %dL); return _%s; }",
 				field.struct().getName(), field.name(), field.name(), offset, field.name()
 			), generated));
 	}
@@ -154,22 +154,22 @@ final class StructClassGenerator {
 	 */
 	private void generateStructArrayAccessor(final CtClass generated, final Struct struct, final Field field, final long offset)
 			throws CannotCompileException, NotFoundException {
-		
+
 		Class<?> nestedStruct = generate(field.struct());
 
 		generated.addField(new CtField(classes.get(HeapArray.class.getName()), "_" + field.name(), generated),
 				String.format("new %s(0L, %dL, %s.create(%s.class))",
 						HeapArray.class.getName(), field.len(), NativeStruct.class.getName(), nestedStruct.getName()));
-		
+
 		generated.addMethod(CtNewMethod.make(String.format(
-				"public final %s %s(){ _%s.address(super.address + %dL); return _%s; }", 
-				HeapArray.class.getName(), field.name(), field.name(), offset, field.name()), 
+				"public final %s %s(){ _%s.address(super.address + %dL); return _%s; }",
+				HeapArray.class.getName(), field.name(), field.name(), offset, field.name()),
 			generated));
 	}
 
 	/*
 	 * Creates getter and setter for a primitive type or String.
-	 * 
+	 *
 	 *   public class Example$GenStruct {
 	 *     public final byte message() {
 	 *       return POINTERS.getByte(super.address + 123L);
@@ -179,21 +179,21 @@ final class StructClassGenerator {
 	 *     }
 	 *   }
 	 */
-	private void generateSimpleFieldAccessor(final CtClass generated, final Struct struct, final Field field, final long offset, 
+	private void generateSimpleFieldAccessor(final CtClass generated, final Struct struct, final Field field, final long offset,
 			final CtClass definition) throws CannotCompileException, NotFoundException {
 
 		String fieldClass = typeToClassName(field, definition);
 
 		generated.addMethod(CtNewMethod.make(String.format(
-				"public final %s %s(){ %s }", 
+				"public final %s %s(){ %s }",
 				fieldClass, field.name(), implementGet(struct, field, offset)
 			), generated));
 
 		generated.addMethod(CtNewMethod.make(String.format(
-				"public final void %s(%s o){ %s }", 
+				"public final void %s(%s o){ %s }",
 				field.name(), fieldClass, implementSet(struct, field, offset)
 			), generated));
-		
+
 	}
 
 	private String implementGet(final Struct struct, final Field field, final long offset) {
@@ -317,7 +317,7 @@ final class StructClassGenerator {
 	}
 
 	private String typeToClassName(Field field, CtClass definition) {
-		Type type = field.type(); 
+		Type type = field.type();
 		if(type == Type.BYTE) {
 			return "byte" + (field.len() == 1 ? "" : "[]");
 		}

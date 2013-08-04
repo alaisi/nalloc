@@ -20,7 +20,7 @@ import com.github.nalloc.Array;
 
 /**
  * {@link Array} containing fixed-sized structs.
- * 
+ *
  * @author Antti Laisi
  */
 @SuppressWarnings("restriction")
@@ -90,5 +90,10 @@ public class HeapArray<T> implements Array<T> {
 	@Override
 	public Array<T> clone() {
 		return new HeapArray<>(address, size, struct.clone());
+	}
+
+	@Override
+	public void close() {
+		free();
 	}
 }

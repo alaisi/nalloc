@@ -17,7 +17,7 @@ public enum PointerArithmetics {
 
 	INSTANCE;
 
-	static final Unsafe UNSAFE;	
+	static final Unsafe UNSAFE;
 	private static final long STRING_VALUE_OFFSET;
 
 	static {
@@ -25,8 +25,8 @@ public enum PointerArithmetics {
 			Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
 			theUnsafe.setAccessible(true);
 			UNSAFE = (Unsafe) theUnsafe.get(null);
-			STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value")) 
-					+ ARRAY_CHAR_BASE_OFFSET 
+			STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"))
+					+ ARRAY_CHAR_BASE_OFFSET
 					+ 12; // TODO: is this constant?
 		} catch(Exception e) {
 			throw new RuntimeException(e);
@@ -100,7 +100,7 @@ public enum PointerArithmetics {
 	public final void setString(final long address, final String string, long len) {
 		UNSAFE.copyMemory(string, STRING_VALUE_OFFSET, null, address, len << 1);
 	}
-	
+
 	// C
 
 	public final char getAnsiCChar(final long address) {

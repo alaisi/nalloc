@@ -22,7 +22,7 @@ import sun.nio.ch.DirectBuffer;
 
 /**
  * {@link Array} containing fixed-sized structs in a memory mapped buffer.
- * 
+ *
  * @author Antti Laisi
  */
 @SuppressWarnings("restriction")

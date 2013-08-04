@@ -32,7 +32,7 @@ import com.github.nalloc.MmapAllocator;
 
 /**
  * {@link MmapAllocator} implementation using direct {@link ByteBuffer}s.
- * 
+ *
  * @author Antti Laisi
  */
 public class DirectBufferMmapAllocator implements MmapAllocator {

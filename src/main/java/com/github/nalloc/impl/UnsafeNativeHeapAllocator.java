@@ -25,7 +25,7 @@ import com.github.nalloc.Pointer;
 
 /**
  * {@link NativeHeapAllocator} implementation using sun.misc.Unsafe.
- * 
+ *
  * @author Antti Laisi
  */
 @SuppressWarnings("restriction")

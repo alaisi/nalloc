@@ -20,7 +20,7 @@ import com.github.nalloc.Pointer;
 
 /**
  * Base class for generated structs. Instances don't hold state, only a memory address.
- * 
+ *
  * @author Antti Laisi
  */
 public abstract class NativeStruct {
@@ -70,7 +70,7 @@ public abstract class NativeStruct {
 				Object o = field.get(this);
 				// nested structs
 				if(o instanceof NativeStruct) {
-					field.set(clone, ((NativeStruct) o).clone());	
+					field.set(clone, ((NativeStruct) o).clone());
 				} else if (o instanceof Pointer<?>) {
 					field.set(clone, ((Pointer<?>) o).clone());
 				}
