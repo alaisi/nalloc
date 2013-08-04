@@ -36,7 +36,7 @@ public interface Pointer<T> extends AutoCloseable {
 	 *
 	 * @param New address
 	 */
-	void address(long address);
+	void address(final long address);
 
 	/**
 	 * Frees memory that is pointed to by this pointer.

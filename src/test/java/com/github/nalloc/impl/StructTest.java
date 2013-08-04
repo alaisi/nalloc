@@ -21,9 +21,10 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
+import com.github.nalloc.Array;
 import com.github.nalloc.NativeHeapAllocator;
-import com.github.nalloc.Struct;
 import com.github.nalloc.Pointer;
+import com.github.nalloc.Struct;
 import com.github.nalloc.Struct.Field;
 import com.github.nalloc.Struct.Type;
 
@@ -92,7 +93,29 @@ public class StructTest {
 		}
 	}
 
-	<T> Pointer<T> struct(Class<T> structType) {
+	@Test
+	public void shouldGetNestedStructs() {
+		try(Pointer<WithNestedStruct> ptr = struct(WithNestedStruct.class)) {
+			WithNestedStruct nested = ptr.deref();
+			nested.compatible().string("12");
+
+			assertEquals("12", nested.compatible().string());
+			assertEquals(nested.compatible().getSize(), nested.getSize());
+		}
+	}
+
+	@Test
+	public void shouldGetNestedStructArrays() {
+		try(Pointer<WithNestedArray> ptr = struct(WithNestedArray.class)) {
+			WithNestedArray array = ptr.deref();
+			array.array().get(1).compatible().string("AB");
+
+			assertEquals("AB", array.array().get(1).compatible().string());
+			assertEquals(2 * array.array().get(0).getSize(), array.getSize());
+		}
+	}
+
+	<T> Pointer<T> struct(final Class<T> structType) {
 		return NativeHeapAllocator.Factory.create(structType).malloc(structType);
 	}
 
@@ -105,13 +128,13 @@ public class StructTest {
 		@Field(name="b", type=Type.BYTE) })
 	static interface SimpleTypes {
 		long lnumber();
-		void lnumber(long value);
+		void lnumber(final long value);
 		int inumber();
-		void inumber(int value);
+		void inumber(final int value);
 		char c();
-		void c(char value);
+		void c(final char value);
 		byte b();
-		void b(byte value);
+		void b(final byte value);
 		long getSize();
 	}
 
@@ -123,15 +146,15 @@ public class StructTest {
 		@Field(name="string", type=Type.STRING, len=6) })
 	static interface ArrayTypes {
 		byte[] barray();
-		void barray(byte[] value);
+		void barray(final byte[] value);
 		char[] carray();
-		void carray(char[] value);
+		void carray(final char[] value);
 		int[] iarray();
-		void iarray(int[] value);
+		void iarray(final int[] value);
 		long[] larray();
-		void larray(long[] value);
+		void larray(final long[] value);
 		String string();
-		void string(String value);
+		void string(final String value);
 		long getSize();
 	}
 
@@ -143,15 +166,30 @@ public class StructTest {
 		@Field(name="string2", type=Type.STRING, len=4)})
 	static interface CCompatible {
 		long l();
-		void l(long value);
+		void l(final long value);
 		char c();
-		void c(char value);
+		void c(final char value);
 		char[] carray();
-		void carray(char[] value);
+		void carray(final char[] value);
 		String string();
-		void string(String value);
+		void string(final String value);
 		String string2();
-		void string2(String value);
+		void string2(final String value);
 		long getSize();
 	}
+
+	@Struct(c=true, pad=8, value={
+		@Field(name="compatible", type=Type.STRUCT, struct=CCompatible.class) })
+	static interface WithNestedStruct {
+		CCompatible compatible();
+		long getSize();
+	}
+
+	@Struct(c=true, pad=8, value={
+		@Field(name="array", type=Type.STRUCT, struct=WithNestedStruct.class, len=2) })
+	static interface WithNestedArray {
+		Array<WithNestedStruct> array();
+		long getSize();
+	}
+
 }

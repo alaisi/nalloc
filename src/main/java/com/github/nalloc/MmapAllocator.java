@@ -35,7 +35,7 @@ public interface MmapAllocator {
 	 * The mapping length is nmemb times struct size. Calling this method allocates at least 3 objects
 	 * from JVM heap. At least one object is eligible for GC. Java execution time is O(1).
 	 */
-	<T> Array<T> mmap(File file, long nmemb, Class<T> structType) throws IOException;
+	<T> Array<T> mmap(final File file, final long nmemb, final Class<T> structType) throws IOException;
 
 	/**
 	 * Casts the buffer to an {@link Array} of type structType. The length of the array is calculated from
@@ -43,21 +43,24 @@ public interface MmapAllocator {
 	 *
 	 * Calling this method always allocates 2 objects (total 64 bytes) from JVM heap.
 	 */
-	<T> Array<T> cast(ByteBuffer buffer, Class<T> structType);
+	<T> Array<T> cast(final ByteBuffer buffer, final Class<T> structType);
 
 	/**
 	 * Casts the {@link Array} of structs to {@link ByteBuffer}.
 	 *
 	 * Calling this method never allocates from JVM heap.
 	 */
-	ByteBuffer cast(Array<?> structs);
+	ByteBuffer cast(final Array<?> structs);
 
 	public class Factory {
 		/**
 		 * Creates a new {@link MmapAllocator} that can allocate structs listed in structTypes.
 		 * This is an expensive operation and callers should store the returned allocator.
+		 *
+		 * @param structTypes Struct classes that the returned allocator can instantiate
+		 * @return New allocator instance
 		 */
-		public static MmapAllocator create(Class<?>... structTypes) {
+		public static MmapAllocator create(final Class<?>... structTypes) {
 			return new DirectBufferMmapAllocator(structTypes);
 		}
 	}

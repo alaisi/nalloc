@@ -22,6 +22,7 @@ import javassist.CtField;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
+import com.github.nalloc.Array;
 import com.github.nalloc.Struct;
 import com.github.nalloc.Struct.Field;
 import com.github.nalloc.Struct.Type;
@@ -98,7 +99,10 @@ final class StructClassGenerator {
 	private void generateGetSize(final CtClass generated, final Struct struct, final long finalOffset)
 			throws CannotCompileException {
 
-		long size = struct.pad() == 1 ? finalOffset : finalOffset + (struct.pad() - finalOffset % struct.pad());
+		long size = finalOffset;
+		if(struct.pad() != 1 && finalOffset % struct.pad() != 0) {
+			size += struct.pad() - finalOffset % struct.pad();
+		}
 		generated.addMethod(CtNewMethod.make(String.format(
 				"public final long getSize(){ return %dL; }", size),
 				generated));
@@ -163,7 +167,7 @@ final class StructClassGenerator {
 
 		generated.addMethod(CtNewMethod.make(String.format(
 				"public final %s %s(){ _%s.address(super.address + %dL); return _%s; }",
-				HeapArray.class.getName(), field.name(), field.name(), offset, field.name()),
+				Array.class.getName(), field.name(), field.name(), offset, field.name()),
 			generated));
 	}
 
@@ -222,7 +226,7 @@ final class StructClassGenerator {
 		return String.format("return POINTERS.getBytes(super.address + %dL, %dL);", offset, field.len());
 	}
 
-	private String implementGetChar(Struct struct, Field field, long offset) {
+	private String implementGetChar(final Struct struct, final Field field, final long offset) {
 		if(struct.c() && field.len() == 1) {
 			return String.format("return POINTERS.getAnsiCChar(super.address + %dL);", offset);
 		}
@@ -249,7 +253,7 @@ final class StructClassGenerator {
 		return String.format("return POINTERS.getLongs(super.address + %dL, %dL);", offset, field.len());
 	}
 
-	private String implementGetString(Struct struct, Field field, long offset) {
+	private String implementGetString(final Struct struct, final Field field, final long offset) {
 		if(struct.c()) {
 			return String.format("return POINTERS.getAnsiCString(super.address + %dL, %dL);", offset, field.len());
 		}
@@ -316,7 +320,7 @@ final class StructClassGenerator {
 		return String.format("return POINTERS.setString(super.address + %dL, $1, %dL);", offset, field.len());
 	}
 
-	private String typeToClassName(Field field, CtClass definition) {
+	private String typeToClassName(final Field field, final CtClass definition) {
 		Type type = field.type();
 		if(type == Type.BYTE) {
 			return "byte" + (field.len() == 1 ? "" : "[]");
@@ -336,7 +340,7 @@ final class StructClassGenerator {
 		throw new IllegalStateException();
 	}
 
-	private long typeByteLength(Struct struct, Field field) {
+	private long typeByteLength(final Struct struct, final Field field) {
 		switch (field.type()) {
 		case BYTE:
 			return 1;
@@ -354,7 +358,7 @@ final class StructClassGenerator {
 		}
 	}
 
-	private long byteLength(Struct struct, Field field) {
+	private long byteLength(final Struct struct, final Field field) {
 		return field.len() * typeByteLength(struct, field);
 	}
 

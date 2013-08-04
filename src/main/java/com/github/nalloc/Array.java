@@ -24,12 +24,12 @@ public interface Array<T> extends Pointer<T> {
 	/**
 	 * @return struct at index.
 	 */
-	T get(long index);
+	T get(final long index);
 
 	/**
 	 * Sets memory to 0 at index.
 	 */
-	T clear(long index);
+	T clear(final long index);
 
 	/**
 	 * Returns the amount of structs in this memory region.

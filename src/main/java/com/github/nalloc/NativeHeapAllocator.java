@@ -36,7 +36,7 @@ public interface NativeHeapAllocator {
 	 * @param structType Class annotated with &#064;Struct
 	 * @return Pointer to struct instance
 	 */
-	<T> Pointer<T> malloc(Class<T> structType);
+	<T> Pointer<T> malloc(final Class<T> structType);
 
 	/**
 	 * The calloc() function allocates memory for an array of nmemb elements of size bytes
@@ -51,7 +51,7 @@ public interface NativeHeapAllocator {
 	 * @param structType Class annotated with &#064;Struct
 	 * @return Pointer to struct array
 	 */
-	<T> Array<T> calloc(long nmemb, Class<T> structType);
+	<T> Array<T> calloc(final long nmemb, final Class<T> structType);
 
 	/**
 	 * The realloc() function changes the size of the memory block pointed to by ptr to size bytes.
@@ -67,7 +67,7 @@ public interface NativeHeapAllocator {
 	 * @param nmemb New size of array
 	 * @return Pointer to struct array of size nmemb
 	 */
-	<T> Array<T> realloc(Array<T> pointer, long nmemb);
+	<T> Array<T> realloc(final Array<T> pointer, final long nmemb);
 
 	public class Factory {
 		/**
@@ -77,7 +77,7 @@ public interface NativeHeapAllocator {
 		 * @param structTypes Struct classes that the returned allocator can instantiate
 		 * @return New allocator instance
 		 */
-		public static NativeHeapAllocator create(Class<?>... structTypes) {
+		public static NativeHeapAllocator create(final Class<?>... structTypes) {
 			return new UnsafeNativeHeapAllocator(structTypes);
 		}
 	}

@@ -66,7 +66,7 @@ public enum PointerArithmetics {
 		UNSAFE.copyMemory(null, address, longs, ARRAY_LONG_BASE_OFFSET, len << 3);
 		return longs;
 	}
-	public final String getString(final long address, long len) {
+	public final String getString(final long address, final long len) {
 		char[] chars = new char[(int) len];
 		UNSAFE.copyMemory(null, address, chars, ARRAY_CHAR_BASE_OFFSET, len << 1);
 		return new String(chars);
@@ -97,7 +97,7 @@ public enum PointerArithmetics {
 	public final void setLongs(final long address, final long[] longs, final long len) {
 		UNSAFE.copyMemory(longs, ARRAY_LONG_BASE_OFFSET, null, address, len << 3);
 	}
-	public final void setString(final long address, final String string, long len) {
+	public final void setString(final long address, final String string, final long len) {
 		UNSAFE.copyMemory(string, STRING_VALUE_OFFSET, null, address, len << 1);
 	}
 
@@ -134,12 +134,12 @@ public enum PointerArithmetics {
 			UNSAFE.putByte(address + i, (byte) chars[i]);
 		}
 	}
-	public final void setAnsiCString(final long address, final String string, long len) {
-			int i = 0;
-			for(; i < len-1 && i < string.length(); i++) {
-				UNSAFE.putByte(address + i, (byte) string.charAt(i));
-			}
-			UNSAFE.putByte(address + i, (byte) 0);
+	public final void setAnsiCString(final long address, final String string, final long len) {
+		int i = 0;
+		for(; i < len-1 && i < string.length(); i++) {
+			UNSAFE.putByte(address + i, (byte) string.charAt(i));
+		}
+		UNSAFE.putByte(address + i, (byte) 0);
 	}
 
 }
