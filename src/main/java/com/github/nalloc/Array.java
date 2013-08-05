@@ -22,7 +22,11 @@ package com.github.nalloc;
 public interface Array<T> extends Pointer<T> {
 
 	/**
-	 * @return struct at index.
+	 * Accessor for array at index. To prevent JVM heap allocations the returned struct is always the
+	 * same object for an array instance and only the struct pointer address is modified by this method.
+	 * Use {@link Array#clone()} if storing the returned object is required.
+	 *
+	 * @return Struct addressed to index.
 	 */
 	T get(final long index);
 
@@ -37,6 +41,9 @@ public interface Array<T> extends Pointer<T> {
 	long size();
 
 	/**
+	 * Returns a shallow clone of an array. Cloning is a cheap operation, only the pointer is cloned and
+	 * not the array content.
+	 *
 	 * @return Clone of this array pointer.
 	 */
 	@Override

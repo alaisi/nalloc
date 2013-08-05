@@ -44,6 +44,9 @@ public interface Pointer<T> extends AutoCloseable {
 	void free();
 
 	/**
+	 * Returns a shallow clone of a pointer. Cloning is a cheap operation, only the pointer is
+	 * cloned and not the data pointed to.
+	 *
 	 * @return Clone of this pointer
 	 */
 	Pointer<T> clone();
