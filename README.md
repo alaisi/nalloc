@@ -1,8 +1,8 @@
-# nalloc
+# nalloc - off-heap memory allocators for Java
 
 [![Build Status](https://drone.io/github.com/alaisi/nalloc/status.png)](https://drone.io/github.com/alaisi/nalloc/latest)
 
-Off-heap memory allocators for Java. Nalloc contains factories for allocating Java objects from native heap and memory mapped files. Basically `void*` and `mmap` in Java.
+Nalloc contains factories for allocating Java objects from native heap and memory mapped files. Basically `void*` and `mmap` in Java.
 
 Off-heap storage is usually required with huge datasets (eg. caches and data grids) or with systems with hard latency requirements (eg. stock trading). Instantiating tens of millions of data entries from JVM heap is slow and likely to cause GC trashing. Off-heap storage for N entries can be instantiated in O(1) and data be handled in pre-allocated arrays with direct pointer access.
 

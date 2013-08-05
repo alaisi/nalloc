@@ -14,11 +14,11 @@
 
 package com.github.nalloc.impl;
 
-import java.nio.MappedByteBuffer;
-
-import com.github.nalloc.Array;
+import java.nio.ByteBuffer;
 
 import sun.nio.ch.DirectBuffer;
+
+import com.github.nalloc.Array;
 
 /**
  * {@link Array} containing fixed-sized structs in a memory mapped buffer.
@@ -28,9 +28,9 @@ import sun.nio.ch.DirectBuffer;
 @SuppressWarnings("restriction")
 final class MmapArray<T> extends HeapArray<T> {
 
-	final MappedByteBuffer buffer;
+	final ByteBuffer buffer;
 
-	MmapArray(final MappedByteBuffer buffer, final long size, final NativeStruct struct) {
+	MmapArray(final ByteBuffer buffer, final long size, final NativeStruct struct) {
 		super(((DirectBuffer) buffer).address(), size, struct);
 		this.buffer = buffer;
 	}

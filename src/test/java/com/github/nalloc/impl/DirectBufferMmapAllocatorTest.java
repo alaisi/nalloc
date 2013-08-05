@@ -58,7 +58,7 @@ public class DirectBufferMmapAllocatorTest {
 	public void shouldAccessStructAsByteBuffer() throws IOException {
 		try(Array<MyMappedStruct> array = allocator.mmap(file(), 1, MyMappedStruct.class)) {
 			MyMappedStruct struct = array.get(0);
-			ByteBuffer buffer = allocator.cast(array);
+			ByteBuffer buffer = allocator.toBytes(array);
 			assertNotNull(buffer);
 
 			buffer.putLong(0, 77);
@@ -67,23 +67,34 @@ public class DirectBufferMmapAllocatorTest {
 	}
 
 	@Test
-	public void shouldAccessByteBufferAsStruct() throws IOException {
+	public void shouldMemoryMapBuffer() {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(128);
 		buffer.order(ByteOrder.nativeOrder());
 		buffer.putLong(123);
 
-		Array<MyMappedStruct> array = allocator.cast(buffer, MyMappedStruct.class);
+		Array<MyMappedStruct> array = allocator.mmap(buffer, MyMappedStruct.class);
 		assertEquals(123, array.deref().id());
+	}
+
+	@Test
+	public void shoulMemoryMapAnonymousBuffer() {
+		try(Array<MyMappedStruct> array = allocator.mmap(10, MyMappedStruct.class)) {
+			array.get(9).id(19);
+			ByteBuffer bytes = allocator.toBytes(array);
+
+			assertEquals(19, array.get(9).id());
+			assertEquals(19, bytes.getLong(9 * (int) array.deref().getSize()));
+		}
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void shouldRejectCastingIndirectBuffer() throws IOException {
-		allocator.cast(ByteBuffer.allocate(8), MyMappedStruct.class);
+		allocator.mmap(ByteBuffer.allocate(8), MyMappedStruct.class);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void shouldRejectCastingBufferInWrongOrder() throws IOException {
-		allocator.cast(ByteBuffer.allocateDirect(8), MyMappedStruct.class);
+		allocator.mmap(ByteBuffer.allocateDirect(8), MyMappedStruct.class);
 	}
 
 	@After

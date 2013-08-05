@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.HashMap;
@@ -51,23 +50,29 @@ public class DirectBufferMmapAllocator implements MmapAllocator {
 	public <T> Array<T> mmap(final File file, final long nmemb, final Class<T> structType) throws IOException {
 		FileChannel channel = FileChannel.open(file.toPath(), READ, WRITE, CREATE);
 		NativeStruct struct = NativeStruct.create(implementations.get(structType));
-		MappedByteBuffer buffer = channel.map(MapMode.READ_WRITE, 0, nmemb * struct.getSize());
-		buffer.order(ByteOrder.nativeOrder());
+		ByteBuffer buffer = channel.map(MapMode.READ_WRITE, 0, nmemb * struct.getSize()).order(ByteOrder.nativeOrder());
 		channel.close();
 		return new MmapArray<T>(buffer, nmemb, struct);
 	}
 
 	@Override
-	public <T> Array<T> cast(final ByteBuffer buffer, final Class<T> structType) {
+	public <T> Array<T> mmap(final ByteBuffer buffer, final Class<T> structType) {
 		if(!buffer.isDirect() || !ByteOrder.nativeOrder().equals(buffer.order())) {
 			throw new IllegalArgumentException("Only direct buffers in native byte order can be mapped");
 		}
 		NativeStruct struct = NativeStruct.create(implementations.get(structType));
-		return new MmapArray<T>((MappedByteBuffer) (buffer), buffer.capacity() / struct.getSize(), struct);
+		return new MmapArray<T>(buffer, buffer.capacity() / struct.getSize(), struct);
 	}
 
 	@Override
-	public ByteBuffer cast(final Array<?> structs) {
+	public <T> Array<T> mmap(final long nmemb, final Class<T> structType) {
+		NativeStruct struct = NativeStruct.create(implementations.get(structType));
+		ByteBuffer buffer = ByteBuffer.allocateDirect((int)(nmemb * struct.getSize())).order(ByteOrder.nativeOrder());
+		return new MmapArray<>(buffer, nmemb, struct);
+	}
+
+	@Override
+	public ByteBuffer toBytes(final Array<?> structs) {
 		MmapArray<?> array = (MmapArray<?>) structs;
 		return array.buffer;
 	}
