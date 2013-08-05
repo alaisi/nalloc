@@ -35,6 +35,10 @@
 		<developerConnection>scm:git:git@github.com:alaisi/nalloc.git</developerConnection>
 		<url>git@github.com:alaisi/nalloc.git</url>
 	</scm>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/alaisi/nalloc/issues</url>
+	</issueManagement>
 
 	<build>
 		<plugins>

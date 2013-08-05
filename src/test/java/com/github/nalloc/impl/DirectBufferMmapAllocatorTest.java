@@ -94,7 +94,7 @@ public class DirectBufferMmapAllocatorTest {
 	}
 
 	File file() throws IOException {
-		return file = File.createTempFile(getClass().getName(), ".map");
+		return file = File.createTempFile(getClass().getSimpleName(), ".map");
 	}
 
 	@Struct({

@@ -43,7 +43,7 @@ final class StructClassGenerator {
 	 */
 	StructClassGenerator(final Class<?>... definitions) {
 		ClassPool.doPruning = true;
-		classes = new ClassPool(false);
+		classes = ClassPool.getDefault(); // TODO: use private pool with new ClassPool(false);
 		classes.appendClassPath(new ClassClassPath(definitions[0]));
 	}
 
@@ -58,6 +58,10 @@ final class StructClassGenerator {
 		}
 
 		Struct struct = definitionClass.getAnnotation(Struct.class);
+		if(struct == null) {
+			throw new IllegalArgumentException("Struct interfaces must be annotated with @Struct");
+		}
+
 		try {
 			return generate(className, definitionClass, struct);
 		} catch (NotFoundException | CannotCompileException e) {
@@ -72,8 +76,10 @@ final class StructClassGenerator {
 		CtClass definition = classes.get(definitionClass.getName());
 		definition.freeze();
 
-		CtClass generated = classes.makeClass(className,
-				classes.get(NativeStruct.class.getName()));
+		CtClass nativeStruct = classes.get(NativeStruct.class.getName());
+		nativeStruct.freeze();
+
+		CtClass generated = classes.makeClass(className, nativeStruct);
 		generated.addInterface(definition);
 
 		long offset = 0;
