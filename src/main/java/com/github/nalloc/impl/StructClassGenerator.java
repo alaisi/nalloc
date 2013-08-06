@@ -43,13 +43,19 @@ final class StructClassGenerator {
 	 */
 	StructClassGenerator(final Class<?>... definitions) {
 		ClassPool.doPruning = true;
-		classes = ClassPool.getDefault(); // TODO: use private pool with new ClassPool(false);
+		classes = new ClassPool(false);
 		classes.appendClassPath(new ClassClassPath(definitions[0]));
 	}
 
+	/**
+	 * Generates a class implementing a struct interface.
+	 *
+	 * @param definitionClass Interface class annotated with &#064;Struct
+	 * @return Implementing class
+	 */
 	@SuppressWarnings("unchecked")
 	final Class<? extends NativeStruct> generate(final Class<?> definitionClass) {
-		String className = definitionClass.getName() + "$GenStruct";
+		String className = definitionClass.getName() + "$GenStruct" + hashCode();
 
 		try {
 			return (Class<? extends NativeStruct>) Class.forName(className, false, definitionClass.getClassLoader());
