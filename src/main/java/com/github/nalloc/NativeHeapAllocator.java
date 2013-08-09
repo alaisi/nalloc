@@ -30,8 +30,7 @@ public interface NativeHeapAllocator {
 	 *
 	 * See <a href="http://pubs.opengroup.org/onlinepubs/009695399/functions/malloc.html">malloc</a>.
 	 *
-	 * Size is determined by struct size. Calling this method allocates always 2 objects (total 32 bytes)
-	 * from JVM heap.
+	 * Size is determined by struct size. Calling this method allocates at least 2 objects from JVM heap.
 	 *
 	 * @param structType Class annotated with &#064;Struct
 	 * @return Pointer to struct instance
@@ -44,8 +43,7 @@ public interface NativeHeapAllocator {
 	 *
 	 * See <a href="http://pubs.opengroup.org/onlinepubs/009695399/functions/calloc.html">calloc</a>.
 	 *
-	 * Calling this method always allocates 2 objects (total 56 bytes) from JVM heap. Java execution
-	 * time is O(1).
+	 * Calling this method allocates at least 2 objects from JVM heap. Java execution time is O(1).
 	 *
 	 * @param nmemb Size of array
 	 * @param structType Class annotated with &#064;Struct

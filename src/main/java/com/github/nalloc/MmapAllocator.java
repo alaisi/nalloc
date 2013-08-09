@@ -39,6 +39,7 @@ public interface MmapAllocator {
 	 * @param file File to mmap
 	 * @param nmemb Amount of structs the mapping has space for
 	 * @param structType Class annotated with &#064;Struct
+	 * @return Mmapped array
 	 */
 	<T> Array<T> mmap(final File file, final long nmemb, final Class<T> structType) throws IOException;
 
@@ -49,10 +50,11 @@ public interface MmapAllocator {
 	 *
 	 * Mmap is called with flags MAP_PRIVATE | MAP_ANONYMOUS. The length of the array is calculated from
 	 * buffer capacity and struct size. The buffer must be created with {@link ByteBuffer#allocateDirect(int)}.
-	 * Calling this method always allocates 2 objects (total 64 bytes) from JVM heap.
+	 * Calling this method always at least 2 objects from JVM heap.
 	 *
 	 * @param buffer Byffer to mmap, must be direct and in native order
 	 * @param structType Class annotated with &#064;Struct
+	 * @return Mmapped array
 	 */
 	<T> Array<T> mmap(final ByteBuffer buffer, final Class<T> structType);
 
@@ -65,7 +67,8 @@ public interface MmapAllocator {
 	 * Calling this method allocates at least 3 objects from JVM heap. Java execution time is O(1).
 	 *
 	 * @param nmemb Amount of structs the mapping has space for
-	 * structType Class annotated with &#064;Struct
+	 * @param structType Class annotated with &#064;Struct
+	 * @return Mmapped array
 	 */
 	<T> Array<T> mmap(final long nmemb, final Class<T> structType);
 
@@ -75,6 +78,7 @@ public interface MmapAllocator {
 	 * Calling this method never allocates from JVM heap.
 	 *
 	 * @param structs Mmapped array
+	 * @return Array memory region as buffer
 	 */
 	ByteBuffer toBytes(final Array<?> structs);
 

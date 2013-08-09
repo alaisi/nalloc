@@ -24,7 +24,8 @@ import java.lang.annotation.Target;
 /**
  * Marks an interface as struct that can be allocated off-heap. Struct annotation
  * contains list of fields in the struct. Fields have a type and length. Fields of
- * length 2 or more are represented by arrays.
+ * length 2 or more are represented by arrays. Nested structs are represented as
+ * struct interfaces an nested struct arrays as Array.
  *
  * @author Antti Laisi
  */

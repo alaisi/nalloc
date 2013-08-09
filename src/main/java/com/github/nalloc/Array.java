@@ -26,17 +26,22 @@ public interface Array<T> extends Pointer<T> {
 	 * same object for an array instance and only the struct pointer address is modified by this method.
 	 * Use {@link Array#clone()} if storing the returned object is required.
 	 *
-	 * @return Struct addressed to index.
+	 * @return Struct addressed to index
 	 */
 	T get(final long index);
 
 	/**
 	 * Sets memory to 0 at index.
+	 *
+	 * @param index Array index to clear
+	 * @return Struct addressed to index
 	 */
 	T clear(final long index);
 
 	/**
 	 * Returns the amount of structs in this memory region.
+	 *
+	 * @return Length of array
 	 */
 	long size();
 
@@ -44,7 +49,7 @@ public interface Array<T> extends Pointer<T> {
 	 * Returns a shallow clone of an array. Cloning is a cheap operation, only the pointer is cloned and
 	 * not the array content.
 	 *
-	 * @return Clone of this array pointer.
+	 * @return Clone of this array pointer
 	 */
 	@Override
 	Array<T> clone();
