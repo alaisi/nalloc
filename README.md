@@ -10,13 +10,13 @@ Nalloc uses almost no JVM heap once initialized and is suitable for systems requ
 
 ## Download
 
-Nalloc is available on [Maven Central](repo1.maven.org/maven2/com/github/alaisi/nalloc/).
+Nalloc is available on [Maven Central](http://repo1.maven.org/maven2/com/github/alaisi/nalloc/).
 
 ```xml
 <dependency>
     <groupId>com.github.alaisi.nalloc</groupId>
     <artifactId>nalloc</artifactId>
-    <version>0.1</version>
+    <version>0.1.Alpha1</version>
 </dependency>
 ```
 
